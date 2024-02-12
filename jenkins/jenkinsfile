@@ -1,0 +1,17 @@
+node {
+  def app
+
+  stage('Clone repository') {
+    checkout scm
+  }
+
+  stage('Build image') {      
+    app = docker.build("hmidev/tennis-matches", "-f docker/Dockerfile .")    
+  }
+
+   stage('Deploy ui') { 
+      sh 'chmod +x ./jenkins/delete_ui_service.sh'
+      sh './jenkins/delete_ui_service.sh'
+      sh "docker stack deploy --compose-file docker/docker-compose.yml TENNIS"    
+  }
+}

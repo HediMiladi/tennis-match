@@ -1,0 +1,21 @@
+version: "3.9"
+
+services:
+  tennis-app:
+    image: "hmidev/tennis-matches"
+    ports:
+      - 4001:3000
+    networks:
+      - web
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.btpgo-tennis-app.entrypoints=websecure"
+      - "traefik.http.routers.btpgo-tennis-app.rule=Host(`tennis-matches.btpgo.fr`)"
+      - "traefik.http.routers.btpgo-tennis-app.tls.certresolver=ovh"
+      - "traefik.http.services.btpgo-tennis-app.loadbalancer.server.port=3000"
+      - "traefik.http.routers.btpgo-tennis-app.tls.domains[0].main=btpgo.fr"
+      - "traefik.http.routers.btpgo-tennis-app.tls.domains[0].sans=*.btpgo.fr"
+networks:
+  web:
+    external: true
+    name: web
